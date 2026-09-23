@@ -7,21 +7,21 @@ AI-powered CLI for building, debugging, and shipping code.
 ### macOS (Homebrew)
 
 ```bash
-brew tap jassie-ai/jassie
-brew install jassie
+brew install --cask jassie-ai/jassie/jassie
 ```
 
-### Linux (Ubuntu/Debian)
+### Linux / macOS (shell script)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Jassie-AI/homebrew-jassie/main/install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/Jassie-AI/homebrew-jassie/main/install.sh | bash
 ```
 
-Or download the `.deb` directly from [Releases](https://github.com/Jassie-AI/homebrew-jassie/releases):
+### Linux (APT / dpkg)
+
+Download the `.deb` for your architecture from [Releases](https://github.com/Jassie-AI/homebrew-jassie/releases):
 
 ```bash
 sudo dpkg -i jassie_*.deb
-sudo apt-get install -f -y
 ```
 
 ### Windows (Chocolatey)
@@ -32,13 +32,9 @@ Download `jassie.<version>.nupkg` from [Releases](https://github.com/Jassie-AI/h
 choco install jassie --source .
 ```
 
-## Post-install
+### Manual (all platforms)
 
-To enable browser-based web tools, install Playwright browsers:
-
-```bash
-jassie playwright-install
-```
+Download the binary for your platform from [Releases](https://github.com/Jassie-AI/homebrew-jassie/releases) and place it in your PATH.
 
 ## Links
 

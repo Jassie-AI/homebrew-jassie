@@ -1,55 +1,76 @@
 #!/usr/bin/env bash
-# Jassie Code CLI installer for Linux (Ubuntu/Debian).
-# Usage: curl -fsSL https://raw.githubusercontent.com/Jassie-AI/homebrew-jassie/main/install.sh | sudo bash
+# Jassie Code CLI installer for Linux and macOS.
+# Usage: curl -fsSL https://raw.githubusercontent.com/Jassie-AI/homebrew-jassie/main/install.sh | bash
 set -euo pipefail
 
 REPO="Jassie-AI/homebrew-jassie"
+INSTALL_DIR="${JASSIE_INSTALL_DIR:-/usr/local/bin}"
 
-# ── Pre-flight checks ────────────────────────────────────────────────
-if [ "$(id -u)" -ne 0 ]; then
-  echo "Error: this installer must be run as root (use sudo)." >&2
-  exit 1
-fi
+# ── Detect platform ──────────────────────────────────────────────────
+OS="$(uname -s)"
+ARCH="$(uname -m)"
 
-if ! command -v dpkg >/dev/null 2>&1; then
-  echo "Error: dpkg not found. This installer supports Debian/Ubuntu only." >&2
-  echo "On other distros, install from source or use Homebrew." >&2
-  exit 1
+case "$OS" in
+  Linux)   PLATFORM="linux" ;;
+  Darwin)  PLATFORM="darwin" ;;
+  *)       echo "Error: unsupported OS: $OS" >&2; exit 1 ;;
+esac
+
+case "$ARCH" in
+  x86_64|amd64)   ARCH_NAME="x64" ;;
+  aarch64|arm64)   ARCH_NAME="arm64" ;;
+  *)               echo "Error: unsupported architecture: $ARCH" >&2; exit 1 ;;
+esac
+
+BINARY_NAME="jassie-${PLATFORM}-${ARCH_NAME}"
+
+# ── Check permissions ────────────────────────────────────────────────
+NEED_SUDO=""
+if [ ! -w "$INSTALL_DIR" ]; then
+  if [ "$(id -u)" -ne 0 ]; then
+    NEED_SUDO="sudo"
+    echo "Note: installing to $INSTALL_DIR requires sudo."
+  fi
 fi
 
 # ── Detect latest release ────────────────────────────────────────────
 echo "Fetching latest Jassie release..."
 if command -v curl >/dev/null 2>&1; then
-  LATEST_URL=$(curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" \
-    | grep -oP '"browser_download_url":\s*"\K[^"]*\.deb')
+  FETCH="curl -fsSL"
 elif command -v wget >/dev/null 2>&1; then
-  LATEST_URL=$(wget -qO- "https://api.github.com/repos/${REPO}/releases/latest" \
-    | grep -oP '"browser_download_url":\s*"\K[^"]*\.deb')
+  FETCH="wget -qO-"
 else
   echo "Error: curl or wget is required." >&2
   exit 1
 fi
 
-if [ -z "$LATEST_URL" ]; then
-  echo "Error: could not find a .deb in the latest release." >&2
-  exit 1
-fi
+RELEASE_JSON=$($FETCH "https://api.github.com/repos/${REPO}/releases/latest")
+VERSION=$(echo "$RELEASE_JSON" | grep -o '"tag_name": *"[^"]*"' | head -1 | sed 's/.*"v\{0,1\}\([^"]*\)".*/\1/')
+DOWNLOAD_URL="https://github.com/${REPO}/releases/download/v${VERSION}/${BINARY_NAME}"
 
-echo "Downloading: $LATEST_URL"
+echo "Installing Jassie v${VERSION} (${PLATFORM}/${ARCH_NAME})..."
 
 # ── Download and install ─────────────────────────────────────────────
 TMPDIR=$(mktemp -d)
 trap 'rm -rf "$TMPDIR"' EXIT
 
-DEB_FILE="$TMPDIR/jassie.deb"
+BINARY_FILE="$TMPDIR/jassie"
 if command -v curl >/dev/null 2>&1; then
-  curl -fsSL -o "$DEB_FILE" "$LATEST_URL"
+  curl -fsSL -o "$BINARY_FILE" "$DOWNLOAD_URL"
 else
-  wget -qO "$DEB_FILE" "$LATEST_URL"
+  wget -qO "$BINARY_FILE" "$DOWNLOAD_URL"
 fi
 
-dpkg -i "$DEB_FILE" || true
-apt-get install -f -y
+chmod +x "$BINARY_FILE"
+
+# Verify the binary runs
+if ! "$BINARY_FILE" --version >/dev/null 2>&1; then
+  echo "Error: downloaded binary failed to execute." >&2
+  exit 1
+fi
+
+$NEED_SUDO mkdir -p "$INSTALL_DIR"
+$NEED_SUDO mv "$BINARY_FILE" "$INSTALL_DIR/jassie"
 
 # ── Verify ────────────────────────────────────────────────────────────
 if command -v jassie >/dev/null 2>&1; then
@@ -57,6 +78,7 @@ if command -v jassie >/dev/null 2>&1; then
   echo "Jassie Code CLI installed successfully!"
   jassie --version
 else
-  echo "Warning: 'jassie' command not found on PATH after install." >&2
-  echo "You may need to restart your shell." >&2
+  echo ""
+  echo "Installed to $INSTALL_DIR/jassie"
+  echo "Make sure $INSTALL_DIR is in your PATH."
 fi
