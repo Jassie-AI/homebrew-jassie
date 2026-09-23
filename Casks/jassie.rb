@@ -8,14 +8,14 @@ cask "jassie" do
          arm64_linux:  "0000000000000000000000000000000000000000000000000000000000000000",
          x86_64_linux: "0000000000000000000000000000000000000000000000000000000000000000"
 
-  url "https://github.com/Jassie-AI/homebrew-jassie/releases/download/v#{version}/jassie-#{os}-#{arch}"
+  url "https://pub-ba9f136fd179474cb0451157d198c49a.r2.dev/releases/#{version}/jassie-#{os}-#{arch}"
   name "Jassie Code"
   desc "AI-powered CLI for building, debugging, and shipping code"
   homepage "https://jassie.ai"
 
   livecheck do
-    url "https://api.github.com/repos/Jassie-AI/homebrew-jassie/releases/latest"
-    regex(/"tag_name":\s*"v?(\d+(?:\.\d+)+)"/i)
+    url "https://pub-ba9f136fd179474cb0451157d198c49a.r2.dev/releases/stable"
+    regex(/^v?(\d+(?:\.\d+)+)$/i)
   end
 
   binary "jassie-#{os}-#{arch}", target: "jassie"
