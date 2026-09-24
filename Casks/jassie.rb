@@ -19,10 +19,11 @@ cask "jassie" do
     regex(/^v?(\d+(?:\.\d+)+)$/i)
   end
 
-  postflight do
-    set_permissions "#{staged_path}/jassie-#{os}-#{arch}", "0755"
-    system_command "/usr/bin/xattr",
-                   args: ["-cr", staged_path.to_s]
+  postflight_steps do
+    on_macos do
+      run "/bin/chmod", args: ["0755", "{{staged_path}}/jassie-#{os}-#{arch}"]
+      run "/usr/bin/xattr", args: ["-cr", "{{staged_path}}"]
+    end
   end
 
   binary "jassie-#{os}-#{arch}", target: "jassie"
