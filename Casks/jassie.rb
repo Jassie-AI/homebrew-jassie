@@ -10,6 +10,7 @@ cask "jassie" do
 
   url "https://pub-ba9f136fd179474cb0451157d198c49a.r2.dev/releases/#{version}/jassie-#{os}-#{arch}"
   name "Jassie Code"
+  container type: :naked
   desc "AI-powered CLI for building, debugging, and shipping code"
   homepage "https://jassie.ai"
 
