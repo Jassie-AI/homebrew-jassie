@@ -21,7 +21,7 @@ cask "jassie" do
 
   postflight_steps do
     on_macos do
-      run "/bin/chmod", args: ["0755", "{{staged_path}}/jassie-#{os}-#{arch}"]
+      run "/bin/chmod", args: ["-R", "0755", "{{staged_path}}"]
       run "/usr/bin/xattr", args: ["-cr", "{{staged_path}}"]
     end
   end
