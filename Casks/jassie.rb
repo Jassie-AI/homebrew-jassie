@@ -19,6 +19,12 @@ cask "jassie" do
     regex(/^v?(\d+(?:\.\d+)+)$/i)
   end
 
+  postflight do
+    set_permissions "#{staged_path}/jassie-#{os}-#{arch}", "0755"
+    system_command "/usr/bin/xattr",
+                   args: ["-cr", staged_path.to_s]
+  end
+
   binary "jassie-#{os}-#{arch}", target: "jassie"
 
   zap trash: [
