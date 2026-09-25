@@ -23,8 +23,8 @@ cask "jassie" do
     run "/bin/sh", args: ["-c", "mv '{{staged_path}}'/jassie-* '{{staged_path}}/jassie'"], must_succeed: true
   end
 
-  postflight do
-    system "/bin/sh", "-c", "python3 -m pip install --break-system-packages --quiet pyobjc 2>/dev/null || true"
+  postflight_steps do
+    run "/bin/sh", args: ["-c", "python3 -m pip install --break-system-packages --quiet pyobjc 2>/dev/null || true"]
   end
 
   binary "jassie"
