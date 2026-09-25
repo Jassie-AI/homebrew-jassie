@@ -29,7 +29,7 @@ cask "jassie" do
 
   binary "jassie"
 
-  zap trash: [
+  uninstall delete: [
     "~/.jassie",
     "~/.config/jassie",
     "~/.cache/jassie",
