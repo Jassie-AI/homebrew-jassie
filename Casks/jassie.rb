@@ -14,14 +14,28 @@ cask "jassie" do
   desc "AI-powered CLI for building, debugging, and shipping code"
   homepage "https://jassie.ai"
 
+  depends_on formula: "clamav"
+
   livecheck do
     url "https://pub-ba9f136fd179474cb0451157d198c49a.r2.dev/releases/stable"
     regex(/^v?(\d+(?:\.\d+)+)$/i)
   end
 
-  # Install dependencies BEFORE the binary so everything works on first launch
+  # Install ALL dependencies BEFORE the binary so everything works on first launch
   preflight_steps do
+    # 1. Accessibility: pyobjc for macOS AX API
     run "/bin/sh", args: ["-c", "python3 -m pip install --break-system-packages --quiet pyobjc 2>/dev/null || true"], must_succeed: false
+    # 2. ClamAV virus definitions: set up freshclam config and download database
+    run "/bin/sh", args: ["-c", <<~SH], must_succeed: false
+      CONF=""; for p in /opt/homebrew /usr/local; do
+        [ -f "$p/etc/clamav/freshclam.conf" ] && CONF="$p/etc/clamav/freshclam.conf" && break
+        [ -f "$p/etc/clamav/freshclam.conf.sample" ] && cp "$p/etc/clamav/freshclam.conf.sample" "$p/etc/clamav/freshclam.conf" && sed -i '' 's/^Example$/# Example/' "$p/etc/clamav/freshclam.conf" && CONF="$p/etc/clamav/freshclam.conf" && break
+      done
+      freshclam 2>/dev/null || true
+    SH
+    # 3. Playwright Chromium browser for web rendering
+    run "/bin/sh", args: ["-c", "python3 -m playwright install chromium 2>/dev/null || true"], must_succeed: false
+    # 4. Rename downloaded binary
     run "/bin/sh", args: ["-c", "mv '{{staged_path}}'/jassie-* '{{staged_path}}/jassie'"], must_succeed: true
   end
 
