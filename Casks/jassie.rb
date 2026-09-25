@@ -19,7 +19,11 @@ cask "jassie" do
     regex(/^v?(\d+(?:\.\d+)+)$/i)
   end
 
-  binary "jassie-#{os}-#{arch}", target: "jassie"
+  preflight_steps do
+    run "/bin/sh", args: ["-c", "mv '{{staged_path}}'/jassie-* '{{staged_path}}/jassie'"], must_succeed: true
+  end
+
+  binary "jassie"
 
   zap trash: [
     "~/.jassie",
