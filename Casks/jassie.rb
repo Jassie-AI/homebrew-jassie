@@ -19,12 +19,15 @@ cask "jassie" do
     regex(/^v?(\d+(?:\.\d+)+)$/i)
   end
 
+  # Install dependencies BEFORE the binary so everything works on first launch
   preflight_steps do
+    run "/bin/sh", args: ["-c", "python3 -m pip install --break-system-packages --quiet pyobjc 2>/dev/null || true"], must_succeed: false
     run "/bin/sh", args: ["-c", "mv '{{staged_path}}'/jassie-* '{{staged_path}}/jassie'"], must_succeed: true
   end
 
+  # Clear macOS quarantine/provenance attributes so Gatekeeper doesn't scan on every launch
   postflight_steps do
-    run "/bin/sh", args: ["-c", "python3 -m pip install --break-system-packages --quiet pyobjc 2>/dev/null || true"]
+    run "/bin/sh", args: ["-c", "find /opt/homebrew/Caskroom/jassie -exec xattr -d com.apple.provenance {} + 2>/dev/null || true"]
   end
 
   binary "jassie"
