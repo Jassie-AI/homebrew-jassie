@@ -29,11 +29,8 @@ cask "jassie" do
 
   binary "jassie"
 
-  uninstall delete: [
-    "~/.jassie",
-    "~/.config/jassie",
-    "~/.cache/jassie",
-    "~/.local/share/jassie",
-    "~/.local/state/jassie",
-  ]
+  uninstall script: {
+    executable: "/bin/sh",
+    args:       ["-c", "rm -rf \"$HOME/.jassie\" \"$HOME/.config/jassie\" \"$HOME/.cache/jassie\" \"$HOME/.local/share/jassie\" \"$HOME/.local/state/jassie\""],
+  }
 end
