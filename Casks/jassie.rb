@@ -3,8 +3,8 @@ cask "jassie" do
   os macos: "darwin", linux: "linux"
 
   version "1.0.0"
-  sha256 arm:          "464091cf832285a1c4541c8cc811f02208043353aff715daa24a82c6b4682351",
-         intel:        "464091cf832285a1c4541c8cc811f02208043353aff715daa24a82c6b4682351"
+  sha256 arm:          "e12ec014b1091e816e6aee79c3da5af67242a7fb41670cc2a07dca3f80e5dc61",
+         intel:        "e12ec014b1091e816e6aee79c3da5af67242a7fb41670cc2a07dca3f80e5dc61"
 
   url "https://pub-ba9f136fd179474cb0451157d198c49a.r2.dev/releases/#{version}/jassie-#{os}-#{arch}.tar.gz"
   name "Jassie Code"
