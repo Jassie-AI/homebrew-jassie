@@ -11,8 +11,6 @@ cask "jassie" do
   desc "AI-powered CLI for building, debugging, and shipping code"
   homepage "https://jassie.ai/"
 
-  depends_on formula: "clamav"
-
   livecheck do
     url "https://pub-61dc367041774690837aa2a72014be22.r2.dev/releases/stable"
     regex(/^v?(\d+(?:\.\d+)+)$/i)
@@ -26,6 +24,7 @@ cask "jassie" do
     run "/bin/sh", args: ["-c", "find /opt/homebrew/Caskroom/jassie -type f \\( -name '*.dylib' -o -name '*.so' \\) -exec codesign --force --sign - {} + 2>/dev/null || true"], must_succeed: false
     run "/bin/sh", args: ["-c", "codesign --force --sign - /opt/homebrew/Caskroom/jassie/*/jassie 2>/dev/null || true"], must_succeed: false
     run "/bin/sh", args: ["-c", "xattr -cr /opt/homebrew/Caskroom/jassie 2>/dev/null || true"], must_succeed: false
+    run "/bin/sh", args: ["-c", "export PATH=/opt/homebrew/bin:/usr/local/bin:$PATH; brew install clamav 2>/dev/null || true"], must_succeed: false, network_access: true
     run "/bin/sh", args: ["-c", "export PATH=/opt/homebrew/bin:/usr/local/bin:$PATH; python3 -m pip install --break-system-packages --quiet pyobjc 2>/dev/null || true"], must_succeed: false, network_access: true
     run "/bin/sh", args: ["-c", "export PATH=/opt/homebrew/bin:/usr/local/bin:$PATH; for p in /opt/homebrew /usr/local; do [ -f \"$p/etc/clamav/freshclam.conf.sample\" ] && ! [ -f \"$p/etc/clamav/freshclam.conf\" ] && cp \"$p/etc/clamav/freshclam.conf.sample\" \"$p/etc/clamav/freshclam.conf\" && sed -i '' 's/^Example$/# Example/' \"$p/etc/clamav/freshclam.conf\"; done; freshclam 2>/dev/null || true"], must_succeed: false, network_access: true
     run "/bin/sh", args: ["-c", "export PATH=/opt/homebrew/bin:/usr/local/bin:$PATH; python3 -m pip install --break-system-packages --quiet playwright 2>/dev/null && python3 -m playwright install chromium 2>/dev/null || true"], must_succeed: false, network_access: true
