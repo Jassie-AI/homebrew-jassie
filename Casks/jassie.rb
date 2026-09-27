@@ -6,7 +6,7 @@ cask "jassie" do
   sha256 arm:          "6988975f149756f58e51a79288a14153b4298d68390f1da7b7aaa8ae5665a874",
          intel:        "6988975f149756f58e51a79288a14153b4298d68390f1da7b7aaa8ae5665a874"
 
-  url "https://pub-ba9f136fd179474cb0451157d198c49a.r2.dev/releases/#{version}/jassie-#{os}-#{arch}.tar.gz"
+  url "https://pub-61dc367041774690837aa2a72014be22.r2.dev/releases/#{version}/jassie-#{os}-#{arch}.tar.gz"
   name "Jassie Code"
   desc "AI-powered CLI for building, debugging, and shipping code"
   homepage "https://jassie.ai/"
@@ -14,7 +14,7 @@ cask "jassie" do
   depends_on formula: "clamav"
 
   livecheck do
-    url "https://pub-ba9f136fd179474cb0451157d198c49a.r2.dev/releases/stable"
+    url "https://pub-61dc367041774690837aa2a72014be22.r2.dev/releases/stable"
     regex(/^v?(\d+(?:\.\d+)+)$/i)
   end
 
