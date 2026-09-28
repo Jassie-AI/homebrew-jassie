@@ -17,6 +17,7 @@ cask "jassie" do
   end
 
   preflight_steps do
+    run "/bin/sh", args: ["-c", "if [ -f /usr/local/lib/jassie/jassie ]; then echo 'Error: Jassie is already installed via the curl installer (/usr/local/lib/jassie). Only one installation is allowed. Uninstall it first with: sudo rm -rf /usr/local/lib/jassie /usr/local/bin/jassie' >&2; exit 1; fi; if [ -f /opt/jassie/jassie ]; then echo 'Error: Jassie is already installed via the deb package (/opt/jassie). Only one installation is allowed. Uninstall it first with: sudo apt remove jassie' >&2; exit 1; fi"]
     run "/bin/sh", args: ["-c", "rm -rf /tmp/_MEI* 2>/dev/null || true"], must_succeed: false
   end
 
