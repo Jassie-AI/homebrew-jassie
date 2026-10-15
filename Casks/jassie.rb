@@ -43,10 +43,7 @@ cask "jassie" do
     end
   end
 
-  # Uninstalling removes everything Jassie Code kept: settings, sessions, memory and the sign-in
-  # (~/.jassie). `jassie uninstall` does the same and also removes the icon font it copied.
-  uninstall_postflight do
-    FileUtils.rm_rf(File.expand_path("~/.jassie"))
-  end
+  # Settings, sessions, memory and the sign-in (~/.jassie) stay on uninstall and upgrade (Homebrew runs
+  # uninstall steps on every upgrade); `brew uninstall --zap jassie` or `jassie uninstall` removes them.
   zap trash: "~/.jassie"
 end
