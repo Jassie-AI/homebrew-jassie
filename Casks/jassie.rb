@@ -2,11 +2,11 @@ cask "jassie" do
   arch arm: "arm64", intel: "x64"
   os macos: "darwin", linux: "linux"
 
-  version "1.0.0"
-  sha256 arm:          "c77b5d120f10d0f99ecd833964069a79c49234b0bba5b63b016c6630e2cf68b6",
-         intel:        "d3286e954bcfa1237f491b133d15b0050f8167300c63843f0c67a4cd8d140754",
-         arm64_linux:  "1aa9606ce697285b02443242d5e3b416c1008c34b3231ab709ebb00d594c9c4c",
-         x86_64_linux: "b760879e6b97f034cd9357829993833d0f663f95e4b63c7e833ea95b586c8ea6"
+  version "1.0.1"
+  sha256 arm:          "3c2fe70093560439db75d71001046af12343d7076830d52fb9e086c96fa28ffb",
+         intel:        "ddd8d3e063248a9dee5152dc5dda30e335d66d4f41afa3a36db1db280a1fe889",
+         arm64_linux:  "d96c53cd9ea750fda0ad0d2df703fdcbf2b76fdddc2eb0fef09963fcac24e3f0",
+         x86_64_linux: "546c9e3baac241c1e4003c9d609dae16cbb5fdeb8419ed0600653156d8917bf3"
 
   url "https://pub-61dc367041774690837aa2a72014be22.r2.dev/releases/#{version}/jassie-#{os}-#{arch}.tar.gz"
   name "Jassie Code"
@@ -33,15 +33,8 @@ cask "jassie" do
     end
   end
 
-  # Downloads are quarantined by macOS; the bundled runtimes must be runnable from a terminal.
-  postflight_steps do
-    if_path_exists "/opt/homebrew/Caskroom/jassie" do
-      run "/bin/sh", args: ["-c", "xattr -dr com.apple.quarantine /opt/homebrew/Caskroom/jassie; true"]
-    end
-    if_path_exists "/usr/local/Caskroom/jassie" do
-      run "/bin/sh", args: ["-c", "xattr -dr com.apple.quarantine /usr/local/Caskroom/jassie; true"]
-    end
-  end
+  # No quarantine stripping: every macOS file in the download is signed and notarized
+  # (jassie/scripts/sign-macos.sh), so Gatekeeper lets the quarantined copy run.
 
   # Settings, sessions, memory and the sign-in (~/.jassie) stay on uninstall and upgrade (Homebrew runs
   # uninstall steps on every upgrade); `brew uninstall --zap jassie` or `jassie uninstall` removes them.
