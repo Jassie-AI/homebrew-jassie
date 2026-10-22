@@ -2,11 +2,11 @@ cask "jassie" do
   arch arm: "arm64", intel: "x64"
   os macos: "darwin", linux: "linux"
 
-  version "1.0.4"
-  sha256 arm:          "fb57b07208c9e1832277a05248522d00f0bb903a268184561a6dc36e0ceb9851",
-         intel:        "c3bf1f03b6e1e30bca8f293ca4bf22074740b2430ff96671d0a3cfe82cd472f4",
-         arm64_linux:  "a1a4009cc0db5d6fbb6f7de409fadad9721a2703cde628e95b206e6715481e50",
-         x86_64_linux: "e83b9a148ae4ec1de888d41c42105a3727f319038a2565c28278af68c32c69af"
+  version "1.0.41"
+  sha256 arm:          "1c52ef314dad0408794dcae0cfeebc7e9666dbf6a28421e5d58974251bb1922b",
+         intel:        "d109e7e39713b41b2bd212b4cf7b363cf2af15535ce49285a6177da45b7aacd4",
+         arm64_linux:  "6b75600e1377bff307b7fb3a5500f8bcb6915493186654df7072211a5d586bb9",
+         x86_64_linux: "362e0e15d997fa5b57b9ee178cd9b5c714cacf1e29cf278c6dcba3ea2e96609f"
 
   url "https://pub-61dc367041774690837aa2a72014be22.r2.dev/releases/#{version}/jassie-#{os}-#{arch}.tar.gz"
   name "Jassie Code"
